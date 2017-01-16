@@ -12,6 +12,10 @@ TodoSchema.statics = {
 
   get() {
     return this.find({});
+  },
+
+  getById(id) {
+    return this.findById(id);
   }
 
 };
