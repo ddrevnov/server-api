@@ -26,7 +26,7 @@ router.route('/:todoId')
   /** DELETE /api/todos/:todoId - Delete todo */
   .delete(todoCtrl.remove);
 
-/** Load todo when API with userId route parameter is hit */
+/** Load todo when API with todoId route parameter is hit */
 router.param('todoId', todoCtrl.load);
 
 export default router;

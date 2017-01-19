@@ -1,4 +1,7 @@
+import Promise from 'bluebird';
 import mongoose from 'mongoose';
+import httpStatus from 'http-status';
+import APIError from '../helpers/APIError';
 
 /**
  * Todo Schema
@@ -10,8 +13,29 @@ const TodoSchema = new mongoose.Schema({
 
 TodoSchema.statics = {
 
-  get() {
+  /**
+   * Get todo's list
+   * @returns {*|Query|T}
+   */
+  getTodos() {
     return this.find({});
+  },
+
+  /**
+   * Get todo
+   * @param id
+   * @returns {Promise.<TResult>}
+   */
+  get(id) {
+    return this.findById(id)
+      .exec()
+      .then((user) => {
+        if (user) {
+          return user;
+        }
+        const err = new APIError('No such user exists!', httpStatus.NOT_FOUND);
+        return Promise.reject(err);
+      });
   },
 
   getById(id) {
