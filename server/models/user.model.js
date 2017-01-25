@@ -2,6 +2,7 @@ import Promise from 'bluebird';
 import mongoose from 'mongoose';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
+import bcrypt from 'bcrypt-nodejs';
 
 /**
  * User Schema
@@ -22,6 +23,18 @@ const UserSchema = new mongoose.Schema({
   }
 });
 
+UserSchema.pre('save', function(next){
+  var user = this;
+  if(!user.isModified('password')) return next();
+
+  bcrypt.hash(user.password, null, null, function(err, hash){
+    if(err) return next(err);
+
+    user.password = hash;
+    next();
+  });
+});
+
 /**
  * Add your
  * - pre-save hooks
@@ -33,6 +46,10 @@ const UserSchema = new mongoose.Schema({
  * Methods
  */
 UserSchema.method({
+  comparePassword(password) {
+    let user = this;
+    return bcrypt.compareSync(password, user.password);
+  }
 });
 
 /**

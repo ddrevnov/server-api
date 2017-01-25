@@ -16,7 +16,8 @@ function login(req, res, next) {
 
   return User.findOne({email: req.body.email})
     .then(user => {
-      if (req.body.email === user.email && req.body.password === user.password) {
+      let validPassword = user.comparePassword(req.body.password);
+      if (validPassword) {
         const token = jwt.sign({
           email: user.email
         }, config.jwtSecret);
@@ -24,6 +25,9 @@ function login(req, res, next) {
           token,
           email: user.email
         });
+      } else {
+        const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED);
+        return next(err);
       }
     })
     .catch(e => {
