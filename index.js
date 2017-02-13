@@ -2,6 +2,17 @@ import mongoose from 'mongoose';
 import util from 'util';
 import config from './config/env';
 import app from './config/express';
+import http from 'http';
+import socketIo from 'socket.io';
+
+const server = http.Server(app);
+const io = socketIo(server);
+
+io.on('connection', (socket) => {
+
+  socket.emit('test');
+
+});
 
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
 
@@ -28,7 +39,7 @@ if (config.MONGOOSE_DEBUG) {
 // src: https://github.com/mochajs/mocha/issues/1912
 if (!module.parent) {
   // listen on port config.port
-  app.listen(config.port, () => {
+  server.listen(config.port, () => {
     debug(`server started on port ${config.port} (${config.env})`);
   });
 }
