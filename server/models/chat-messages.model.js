@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
  */
 const ChatMessageSchema = new mongoose.Schema({
   text: { type: String, required: true, trim: true },
+  chatName: { type: String, required: true, trim: true },
   room: {type: mongoose.Schema.Types.ObjectId, ref: 'ChatRoom'},
 });
 
