@@ -8,9 +8,9 @@ function getRooms(req, res, next) {
 }
 
 function getMessagesByRoom(req, res, next) {
-  let roomId = req.params.roomId;
+  let roomName = req.params.roomName;
 
-  ChatMessage.getByRoom(roomId)
+  ChatMessage.getByRoom(roomName)
     .then(messages => res.json(messages))
     .catch(err => next(err));
 }

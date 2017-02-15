@@ -7,8 +7,8 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.route('/rooms')
   .get(chatCtrl.getRooms);
 
-/** GET /api/chat/messages/{roomId} - return array of messages of room  */
-router.route('/messages/:roomId')
+/** GET /api/chat/messages/{roomName} - return array of messages of room  */
+router.route('/messages/:roomName')
   .get(chatCtrl.getMessagesByRoom);
 
 /** POST /api/chat/messages - return array of rooms */
