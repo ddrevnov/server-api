@@ -4,15 +4,13 @@ import config from './config/env';
 import app from './config/express';
 import http from 'http';
 import socketIo from 'socket.io';
+import Chat from './server/chat';
 
 const server = http.Server(app);
 const io = socketIo(server);
 
-io.on('connection', (socket) => {
-
-  socket.emit('test');
-
-});
+const chat = new Chat(io);
+chat.init();
 
 const debug = require('debug')('express-mongoose-es6-rest-api:index');
 
