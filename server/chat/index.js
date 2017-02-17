@@ -20,7 +20,8 @@ export default class Chat {
       socket.on('new user', ({ room }) => {
         if (!room) room = this.defaultRoom;
         socket.join(room);
-        this.io.in(this.defaultRoom).emit('user joined', {room});
+        this.io.in(this.defaultRoom)
+          .emit('user joined', {newRoom: room, oldRoom: null});
       });
 
       socket.on('switch room', (data) => {

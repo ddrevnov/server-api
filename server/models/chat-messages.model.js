@@ -13,7 +13,7 @@ const ChatMessageSchema = new mongoose.Schema({
 ChatMessageSchema.statics = {
 
   getByRoom(roomName) {
-    return this.find({room: roomName});
+    return this.find({room: roomName}).sort('created');
   },
 
 };
