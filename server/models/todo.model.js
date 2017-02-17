@@ -8,7 +8,8 @@ import APIError from '../helpers/APIError';
  */
 const TodoSchema = new mongoose.Schema({
   text: { type: String, required: true, trim: true },
-  completed: { type: Boolean, required: true }
+  completed: { type: Boolean, required: true },
+  created: { type: Date, default: Date.now }
 });
 
 TodoSchema.statics = {
@@ -18,7 +19,7 @@ TodoSchema.statics = {
    * @returns {*|Query|T}
    */
   getTodos() {
-    return this.find({});
+    return this.find({}).sort('-created');
   },
 
   /**

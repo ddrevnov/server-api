@@ -47,7 +47,7 @@ function create(req, res, next) {
       });
     })
     .catch(e => {
-      const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED);
+      const err = new APIError('Conflict', httpStatus.CONFLICT);
       return next(err);
     });
 }
