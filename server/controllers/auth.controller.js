@@ -14,16 +14,16 @@ const config = require('../../config/env');
  */
 function login(req, res, next) {
 
-  return User.findOne({email: req.body.email})
+  return User.findOne({'local.email': req.body.email})
     .then(user => {
       let validPassword = user.comparePassword(req.body.password);
       if (validPassword) {
         const token = jwt.sign({
-          email: user.email
+          email: user.local.email
         }, config.jwtSecret);
         return res.json({
           token,
-          email: user.email
+          email: user.local.email
         });
       } else {
         const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED);

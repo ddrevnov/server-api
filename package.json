@@ -56,6 +56,8 @@
     "method-override": "^2.3.5",
     "mongoose": "4.7.4",
     "morgan": "1.7.0",
+    "passport": "^0.3.2",
+    "passport-google-oauth": "^1.0.0",
     "socket.io": "^1.7.2",
     "winston": "2.3.0"
   },

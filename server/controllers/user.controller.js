@@ -32,18 +32,20 @@ function get(req, res) {
  */
 function create(req, res, next) {
   const user = new User({
-    email: req.body.email,
-    password: req.body.password,
+    local: {
+      email: req.body.email,
+      password: req.body.password,
+    }
   });
 
   user.save()
     .then(savedUser => {
       const token = jwt.sign({
-        email: savedUser.email
+        email: savedUser.local.email
       }, config.jwtSecret);
       return res.json({
         token,
-        email: savedUser.email
+        email: savedUser.local.email
       });
     })
     .catch(e => {
