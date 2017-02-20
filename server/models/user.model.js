@@ -12,12 +12,9 @@ const UserSchema = new mongoose.Schema({
   local: {
     email: {
       type: String,
-      required: true,
-      unique: true
     },
     password: {
       type: String,
-      required: true
     },
     createdAt: {
       type: Date,

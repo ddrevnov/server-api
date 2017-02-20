@@ -13,6 +13,7 @@ import winstonInstance from './winston';
 import routes from '../server/routes/index.route';
 import config from './env';
 import APIError from '../server/helpers/APIError';
+import passport from 'passport';
 
 const app = express();
 
@@ -24,6 +25,9 @@ if (config.env === 'production') {
 if (config.env === 'development') {
   app.use(logger('dev'));
 }
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // parse body params and attache them to req.body
 app.use(bodyParser.json());

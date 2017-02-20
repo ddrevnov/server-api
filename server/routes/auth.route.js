@@ -12,14 +12,18 @@ const router = express.Router(); // eslint-disable-line new-cap
 router.route('/login')
   .post(validate(paramValidation.login), authCtrl.login);
 
-router.route('/auth/google')
-  .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
-
-router.route('/auth/google/callback')
+router.route('/google')
   .get(
-    passport.authenticate('google', {
-    successRedirect : '/profile',
-    failureRedirect : '/'})
+    passport.authenticate('google', { scope : ['profile', 'email'] })
+  );
+
+router.route('/google/callback')
+  .get(
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    function(req, res, next) {
+      console.log('ssssssssssssssssssssssssssssssssssssssss');
+      res.redirect('/');
+    }
   );
 
 /** GET /api/auth/random-number - Protected route,
