@@ -41,7 +41,7 @@ function create(req, res, next) {
   user.save()
     .then(savedUser => {
       const token = jwt.sign({
-        email: savedUser.local.email
+        id: savedUser._id
       }, config.jwtSecret);
       return res.json({
         token,

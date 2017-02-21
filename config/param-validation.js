@@ -23,17 +23,18 @@ export default {
   // POST /api/auth/login
   login: {
     body: {
-      email: Joi.string().email().required(),
-      password: Joi.string().required()
+      email: Joi.string().email(),
+      password: Joi.string(),
+      type: Joi.string(),
+      id: Joi.string(),
+      name: Joi.string(),
     }
   },
 
   // POST /api/todos
   createTodo: {
-    body: {
-      text: Joi.string().required(),
-      completed: Joi.boolean().required()
-    }
+    text: Joi.string().required(),
+    completed: Joi.boolean().required()
   },
 
   // UPDATE /api/todos/:id

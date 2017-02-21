@@ -4,27 +4,12 @@ import expressJwt from 'express-jwt';
 import paramValidation from '../../config/param-validation';
 import authCtrl from '../controllers/auth.controller';
 import config from '../../config/env';
-import passport from 'passport';
 
 const router = express.Router(); // eslint-disable-line new-cap
 
 /** POST /api/auth/login - Returns token if correct email and password is provided */
 router.route('/login')
   .post(validate(paramValidation.login), authCtrl.login);
-
-router.route('/google')
-  .get(
-    passport.authenticate('google', { scope : ['profile', 'email'] })
-  );
-
-router.route('/google/callback')
-  .get(
-    passport.authenticate('google', { failureRedirect: '/login' }),
-    function(req, res, next) {
-      console.log('ssssssssssssssssssssssssssssssssssssssss');
-      res.redirect('/');
-    }
-  );
 
 /** GET /api/auth/random-number - Protected route,
  * needs token returned by the above as header. Authorization: Bearer {token} */

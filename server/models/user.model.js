@@ -9,6 +9,11 @@ import bcrypt from 'bcrypt-nodejs';
  */
 const UserSchema = new mongoose.Schema({
 
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+
   local: {
     email: {
       type: String,
@@ -16,15 +21,10 @@ const UserSchema = new mongoose.Schema({
     password: {
       type: String,
     },
-    createdAt: {
-      type: Date,
-      default: Date.now
-    }
   },
 
   google: {
     id: String,
-    token: String,
     email: String,
     name: String
   }

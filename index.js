@@ -5,13 +5,9 @@ import app from './config/express';
 import http from 'http';
 import socketIo from 'socket.io';
 import Chat from './server/chat';
-import passport from 'passport';
-import passportModule from './server/passport';
 
 const server = http.Server(app);
 const io = socketIo(server);
-
-passportModule(passport);
 
 const chat = new Chat(io);
 chat.init();

@@ -13,27 +13,74 @@ const config = require('../../config/env');
  * @returns {*}
  */
 function login(req, res, next) {
+  const type = req.body.type;
+  let condition = null;
+  const authErr = new APIError('Authentication error', httpStatus.UNAUTHORIZED);
 
-  return User.findOne({'local.email': req.body.email})
-    .then(user => {
-      let validPassword = user.comparePassword(req.body.password);
-      if (validPassword) {
-        const token = jwt.sign({
-          email: user.local.email
-        }, config.jwtSecret);
-        return res.json({
-          token,
-          email: user.local.email
-        });
-      } else {
-        const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED);
-        return next(err);
-      }
-    })
-    .catch(e => {
-      const err = new APIError('Authentication error', httpStatus.UNAUTHORIZED);
-      return next(err);
-    });
+  switch (type) {
+    case 'local':
+      condition = {'local.email': req.body.email};
+      break;
+    case 'google':
+      condition = {'google.id': req.body.id};
+      break;
+  }
+
+  if (!condition) return next(authErr);
+
+  if (type === 'local') {
+    User.findOne(condition)
+      .then(user => {
+        let validPassword = user.comparePassword(req.body.password);
+        if (validPassword) {
+          const token = jwt.sign({
+            id: user._id
+          }, config.jwtSecret);
+          return res.json({
+            token,
+            email: user.local.email
+          });
+        } else {
+          return next(authErr);
+        }
+      })
+      .catch(e => {
+        return next(authErr);
+      });
+  } else {
+    User.findOne(condition)
+      .then(user => {
+        if (!user) {
+          User.create({
+            [type]: {
+              id: req.body.id,
+              name: req.body.name,
+              email: req.body.email,
+            }
+          })
+            .then(user => {
+              const token = jwt.sign({
+                id: user._id
+              }, config.jwtSecret);
+              return res.json({
+                token,
+                id: user[type].id
+              });
+            })
+            .catch(err => {
+              return next(authErr);
+            });
+        } else {
+          const token = jwt.sign({
+            id: user._id
+          }, config.jwtSecret);
+          return res.json({
+            token,
+            id: user[type].id
+          });
+        }
+      });
+  }
 
 }
 
