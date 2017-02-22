@@ -12,8 +12,11 @@ export default {
   // UPDATE /api/users/:userId
   updateUser: {
     body: {
-      email: Joi.string().email().required(),
-      password: Joi.string().required(),
+      email: Joi.string().email(),
+      password: Joi.string(),
+      providers: Joi.array(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
     },
     params: {
       userId: Joi.string().hex().required()
@@ -25,9 +28,9 @@ export default {
     body: {
       email: Joi.string().email(),
       password: Joi.string(),
-      type: Joi.string(),
-      id: Joi.string(),
-      name: Joi.string(),
+      providers: Joi.array(),
+      firstName: Joi.string(),
+      lastName: Joi.string(),
     }
   },
 

@@ -2,6 +2,7 @@ import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
+import co from 'co';
 
 const config = require('../../config/env');
 
@@ -31,27 +32,33 @@ function get(req, res) {
  * @returns {User}
  */
 function create(req, res, next) {
-  const user = new User({
-    local: {
-      email: req.body.email,
-      password: req.body.password,
-    }
-  });
+  let { email, password } = req.body;
+  const conflictErr = new APIError('Conflict', httpStatus.CONFLICT);
 
-  user.save()
-    .then(savedUser => {
+  co(function* () {
+    try {
+      let user = yield User.findOne({email});
+
+      if (user) {
+        return next(conflictErr);
+      } else {
+        user = new User({
+          email,
+          password,
+        });
+      }
+
+      let savedUser = yield user.save();
+
       const token = jwt.sign({
         id: savedUser._id
       }, config.jwtSecret);
-      return res.json({
-        token,
-        email: savedUser.local.email
-      });
-    })
-    .catch(e => {
-      const err = new APIError('Conflict', httpStatus.CONFLICT);
-      return next(err);
-    });
+      return res.json({token});
+    } catch (err) {
+      return next(conflictErr);
+    }
+  });
+
 }
 
 /**

@@ -9,36 +9,29 @@ import bcrypt from 'bcrypt-nodejs';
  */
 const UserSchema = new mongoose.Schema({
 
+  email: {type: String, unique: true},
+  password: String,
+
+  firstName: String,
+  lastName: String,
+
+  providers: Array,
+
   createdAt: {
     type: Date,
     default: Date.now
   },
 
-  local: {
-    email: {
-      type: String,
-    },
-    password: {
-      type: String,
-    },
-  },
-
-  google: {
-    id: String,
-    email: String,
-    name: String
-  }
-
 });
 
 UserSchema.pre('save', function(next){
   var user = this;
-  if(!user.isModified('local.password')) return next();
+  if(!user.isModified('password')) return next();
 
-  bcrypt.hash(user.local.password, null, null, function(err, hash){
+  bcrypt.hash(user.password, null, null, function(err, hash){
     if(err) return next(err);
 
-    user.local.password = hash;
+    user.password = hash;
     next();
   });
 });
@@ -56,7 +49,7 @@ UserSchema.pre('save', function(next){
 UserSchema.method({
   comparePassword(password) {
     let user = this;
-    return bcrypt.compareSync(password, user.local.password);
+    return bcrypt.compareSync(password, user.password);
   }
 });
 

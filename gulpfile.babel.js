@@ -24,21 +24,6 @@ gulp.task('copy', () =>
     .pipe(gulp.dest('dist'))
 );
 
-// Compile ES6 to ES5 and copy to dist
-gulp.task('babel', () =>
-  gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
-    .pipe(plugins.newer('dist'))
-    .pipe(plugins.sourcemaps.init())
-    .pipe(plugins.babel())
-    .pipe(plugins.sourcemaps.write('.', {
-      includeContent: false,
-      sourceRoot(file) {
-        return path.relative(file.path, __dirname);
-      }
-    }))
-    .pipe(gulp.dest('dist'))
-);
-
 // Start server with restart on file changes
 gulp.task('nodemon', ['copy', 'babel'], () =>
   plugins.nodemon({
@@ -47,6 +32,22 @@ gulp.task('nodemon', ['copy', 'babel'], () =>
     ignore: ['node_modules/**/*.js', 'dist/**/*.js'],
     tasks: ['copy', 'babel']
   })
+);
+
+// Compile ES6 to ES5 and copy to dist
+gulp.task('babel', () =>
+  gulp.src([...paths.js, '!gulpfile.babel.js'], { base: '.' })
+    .pipe(plugins.newer('dist'))
+    .pipe(plugins.sourcemaps.init())
+    .pipe(plugins.babel())
+    .pipe(plugins.babel({plugins: ['transform-runtime']}))
+    .pipe(plugins.sourcemaps.write('.', {
+      includeContent: false,
+      sourceRoot(file) {
+        return path.relative(file.path, __dirname);
+      }
+    }))
+    .pipe(gulp.dest('dist'))
 );
 
 // gulp serve for development
