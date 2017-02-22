@@ -38,7 +38,7 @@ function login(req, res, next) {
           }, config.jwtSecret);
           return res.json({
             token,
-            email: user.local.email
+            id: user._id
           });
         } else {
           return next(authErr);
